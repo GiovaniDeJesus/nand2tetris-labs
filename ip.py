@@ -42,3 +42,6 @@ for entry in ip_with_ports:
 # Print the resolved entries
 for entry, resolved in resolved_entries:
     print(f"{entry} resolves to {resolved}")
+
+
+sed -i -E 's/[^A-Za-z0-9.-]+/ /g; s/[^.-]+[.-]+([^.-]+)+/\1/g' input.txt
