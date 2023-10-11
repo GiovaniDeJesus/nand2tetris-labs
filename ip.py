@@ -19,7 +19,11 @@ ip_with_ports = re.findall(ip_with_port_pattern, text)
 resolved_entries = []
 
 for entry in ip_addresses:
-    resolved_entries.append((entry, socket.gethostbyaddr(entry)[0] if '.' in entry else 'N/A'))
+    try:
+        hostname = socket.gethostbyaddr(entry)[0]
+    except socket.herror:
+        hostname = 'N/A'
+    resolved_entries.append((entry, hostname))
 
 for entry in urls:
     hostname = entry.split('//')[1].split('/')[0]
@@ -29,7 +33,11 @@ for entry in ip_with_ports:
     parts = entry.split(':')
     hostname = parts[0]
     port = parts[1]
-    resolved_entries.append((entry, socket.gethostbyname(hostname) + ':' + port))
+    try:
+        ip = socket.gethostbyname(hostname)
+        resolved_entries.append((entry, ip + ':' + port))
+    except socket.herror:
+        resolved_entries.append((entry, 'N/A'))
 
 # Print the resolved entries
 for entry, resolved in resolved_entries:
